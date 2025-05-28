@@ -49,7 +49,7 @@ Implementação da programação concorrente:
 
 ### Versão Simples (Sequencial)
 ```bash
-python main_programa.py
+python3 main_programa.py
 ```
 
 ### Versão Concorrente
