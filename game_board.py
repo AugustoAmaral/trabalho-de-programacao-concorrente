@@ -3,6 +3,7 @@ import time
 import random
 import signal
 import sys
+import os
 from entity import EntityType, EntityState
 from human import Human
 from zombie import Zombie
@@ -63,7 +64,13 @@ class GameBoard:
                 self.position_conditions[(x, y)] = threading.Condition(self.position_locks[(x, y)])
     
     def start_game(self):
-        self.logger.initialize(f"game_log_{int(time.time())}.txt", self.show_realtime_logs)
+        # Create logs directory if it doesn't exist
+        logs_dir = "logs"
+        if not os.path.exists(logs_dir):
+            os.makedirs(logs_dir)
+        
+        log_file_path = os.path.join(logs_dir, f"game_log_{int(time.time())}.txt")
+        self.logger.initialize(log_file_path, self.show_realtime_logs)
         self.logger.log(LogEvent.GAME_START, f"Game started with {self.humans_amount} humans and {self.zombies_amount} zombies")
         
         self.initialize_positions()
