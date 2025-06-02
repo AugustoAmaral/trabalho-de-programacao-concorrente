@@ -1,197 +1,102 @@
-# Jogo Zombie - Programação Concorrente
+# Jogo Zumbis vs Humanos - Programação Concorrente
 
-Este projeto implementa um jogo de tabuleiro onde elementos azuis tentam chegar à direita do tabuleiro enquanto zombies tentam infectá-los.
+## Descrição
 
-## 📋 Descrição do Projeto
+Jogo de tabuleiro concorrente onde humanos tentam atravessar o tabuleiro enquanto zumbis tentam impedi-los. Cada entidade é executada em sua própria thread, demonstrando conceitos de programação concorrente.
 
-- **Tabuleiro**: Array 2D de 50x50 posições
-- **Elementos**: 
-  - 🔵 **Azuis**: Tentam chegar à direita do tabuleiro
-  - 🧟 **Zombies**: Infectam elementos azuis adjacentes
-- **Movimento**: Todos os elementos se movem aleatoriamente (horizontal/vertical)
-- **Infecção**: Zombies convertem azuis adjacentes em zombies
-- **Condições de Fim**:
-  - Todos os elementos viram zombies (derrota)
-  - Um elemento azul chega à direita (vitória)
+## Requisitos
 
-## 🗂️ Estrutura dos Módulos
+- Python 3.7+
+- Sem dependências externas
 
-### 1. `tabuleiro_display.py`
-Módulo responsável pela exibição do jogo no terminal (CLI):
-- Exibe o tabuleiro com símbolos visuais
-- Atualiza a tela em tempo real
-- Mostra informações da rodada
-- Exibe resultado final
+## Como Executar
 
-### 2. `jogo_logica.py`
-Contém a lógica principal do jogo:
-- Inicialização do tabuleiro
-- Movimentação dos elementos
-- Sistema de infecção
-- Verificação das condições de fim
-- Controle de rodadas
-
-### 3. `main_programa.py`
-Programa principal que executa o jogo:
-- Interface de configuração
-- Loop principal do jogo
-- Tratamento de exceções
-- Controle de execução
-
-### 4. `elemento_concorrente.py`
-Implementação da programação concorrente:
-- Cada elemento roda em sua própria thread
-- Sincronização com locks
-- Gerenciamento de threads
-- Movimentação assíncrona
-
-## 🚀 Como Executar
-
-### Versão Simples (Sequencial)
+### Execução Básica
 ```bash
-python3 main_programa.py
+python main.py
 ```
 
-### Versão Concorrente
-```python
-from elemento_concorrente import JogoZombieConcorrente
-from tabuleiro_display import TabuleiroCLI
-
-# Criar instâncias
-jogo = JogoZombieConcorrente()
-display = TabuleiroCLI()
-
-# Inicializar e executar
-jogo.inicializar_jogo(10, 5)  # 10 azuis, 5 zombies
-
-# Loop do jogo
-try:
-    while True:
-        display.exibir_tabuleiro(jogo.tabuleiro, jogo.rodada)
-        
-        fim, motivo = jogo.verificar_condicoes_fim()
-        if fim:
-            display.exibir_resultado(motivo, jogo.rodada)
-            break
-            
-        display.pausar(0.5)
-        jogo.rodada += 1
-
-finally:
-    jogo.finalizar()  # Para todas as threads
+### Execução com Parâmetros Personalizados
+```bash
+python main.py --board-size 30 --humans 40 --zombies 15 --zombie-strategy PERSEGUICAO
 ```
 
-## ⚙️ Configurações
+## Parâmetros Disponíveis
 
-### Parâmetros Personalizáveis
-- **Tamanho do tabuleiro**: Padrão 50x50
-- **Número de elementos azuis**: Padrão 10 (máximo recomendado: 20)
-- **Número de zombies**: Padrão 5 (máximo recomendado: 10)
-- **Velocidade de atualização**: Configurável no display
+| Parâmetro | Descrição | Padrão | Limites |
+|-----------|-----------|---------|---------|
+| `--board-size` | Tamanho do tabuleiro NxN | 50 | 10-100 |
+| `--humans` | Quantidade inicial de humanos | 50 | 1-N |
+| `--zombies` | Quantidade inicial de zumbis | 10 | 1-N |
+| `--cooldown-min` | Tempo mínimo entre movimentos (s) | 0.5 | ≥0.1 |
+| `--cooldown-max` | Tempo máximo entre movimentos (s) | 2.0 | ≤5.0 |
+| `--game-timeout` | Tempo limite do jogo (s), 0=sem limite | 300 | ≥0 |
+| `--position-wait-timeout` | Tempo máximo de espera por posição (s) | 5.0 | >0 |
+| `--human-bias` | Probabilidade de humanos moverem à direita | 0.6 | 0.0-1.0 |
+| `--no-human-bias` | Desabilita movimento preferencial | False | - |
+| `--zombie-strategy` | Estratégia de movimento dos zumbis | ALEATORIO | ALEATORIO, PERSEGUICAO, BLOQUEIO |
+| `--zombie-range` | Alcance para perseguição de zumbis | 3 | >0 |
+| `--display-rate` | Taxa de atualização da tela (s) | 0.5 | >0 |
 
-### Modificar Configurações
-```python
-# No main_programa.py ou ao criar as instâncias
-jogo = JogoZombie(tamanho=30)  # Tabuleiro 30x30
-jogo.inicializar_jogo(num_azuis=15, num_zombies=3)
+## Regras do Jogo
+
+1. **Objetivo dos Humanos**: Atravessar o tabuleiro da esquerda para a direita
+2. **Objetivo dos Zumbis**: Transformar todos os humanos em zumbis
+3. **Transformação**: Quando um zumbi fica adjacente a um humano, o humano se transforma em zumbi
+4. **Movimento**: Cada entidade move 1 casa por vez (horizontal ou vertical)
+5. **Vitória**: 
+   - Humanos vencem se pelo menos um chegar ao lado direito
+   - Zumbis vencem se não houver mais humanos
+   - Empate se o tempo limite for atingido
+
+## Estratégias dos Zumbis
+
+- **ALEATORIO**: Movimento completamente aleatório
+- **PERSEGUICAO**: Move em direção ao humano mais próximo dentro do alcance
+- **BLOQUEIO**: Tenta se posicionar entre humanos e o objetivo
+
+## Símbolos do Tabuleiro
+
+- 🧑 : Humano
+- 🧟 : Zumbi
+- ⬜ : Espaço vazio
+
+## Exemplos de Uso
+
+### Jogo Rápido (tabuleiro pequeno)
+```bash
+python main.py --board-size 20 --humans 15 --zombies 5 --cooldown-max 1.0
 ```
 
-## 🎮 Controles
-
-- **Enter**: Avançar configuração
-- **Ctrl+C**: Interromper jogo
-- **s/n**: Escolhas de configuração
-
-## 🔧 Recursos Implementados
-
-### ✅ Funcionalidades Básicas
-- [x] Tabuleiro 50x50
-- [x] Elementos azuis e zombies
-- [x] Movimento aleatório
-- [x] Sistema de infecção
-- [x] Condições de vitória/derrota
-- [x] Interface CLI com símbolos visuais
-
-### ✅ Programação Concorrente
-- [x] Threads individuais para cada elemento
-- [x] Sincronização com locks
-- [x] Movimento assíncrono
-- [x] Gerenciamento seguro de threads
-
-### ✅ Recursos Adicionais
-- [x] Configuração personalizada
-- [x] Estatísticas em tempo real
-- [x] Tratamento de erros
-- [x] Interface amigável
-- [x] Documentação completa
-
-## 🏗️ Arquitetura
-
-```
-┌─────────────────┐    ┌──────────────────┐
-│  main_programa  │───▶│  jogo_logica     │
-└─────────────────┘    └──────────────────┘
-         │                       │
-         ▼                       ▼
-┌─────────────────┐    ┌──────────────────┐
-│tabuleiro_display│    │elemento_concorren│
-└─────────────────┘    └──────────────────┘
+### Jogo Estratégico (zumbis perseguidores)
+```bash
+python main.py --zombie-strategy PERSEGUICAO --zombie-range 5 --no-human-bias
 ```
 
-### Fluxo de Execução
-1. **Inicialização**: Configuração e criação do tabuleiro
-2. **Loop Principal**: Atualização e exibição contínua
-3. **Movimentação**: Elementos se movem independentemente
-4. **Verificação**: Checagem das condições de fim
-5. **Finalização**: Limpeza e exibição do resultado
-
-## 🐛 Tratamento de Erros
-
-- **Posições inválidas**: Verificação de limites do tabuleiro
-- **Concorrência**: Locks para evitar condições de corrida
-- **Interrupção**: Graceful shutdown com Ctrl+C
-- **Threads**: Timeout e cleanup automático
-- **Entrada inválida**: Valores padrão em caso de erro
-
-## 📊 Exemplo de Execução
-
-```
-=== JOGO ZOMBIE - RODADA 15 ===
-🔵 = Elemento Azul | 🧟 = Zombie | ⬜ = Vazio
-Objetivo: Elementos azuis devem chegar à direita do tabuleiro!
-------------------------------------------------------------
-    0         10        20        30        40        
- 0 ⬜⬜🔵⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
- 1 ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
- 2 ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜🧟⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-...
-------------------------------------------------------------
-Pressione Ctrl+C para parar o jogo
+### Jogo Longo (sem timeout)
+```bash
+python main.py --game-timeout 0 --board-size 100 --humans 100 --zombies 20
 ```
 
-## 🤝 Contribuições
+## Interrupção do Jogo
 
-Para modificar ou estender o projeto:
+Pressione `Ctrl+C` a qualquer momento para interromper o jogo de forma segura. Todas as threads serão finalizadas corretamente.
 
-1. **Adicionar novos tipos de elementos**: Modificar `jogo_logica.py`
-2. **Melhorar interface**: Atualizar `tabuleiro_display.py`
-3. **Otimizar concorrência**: Ajustar `elemento_concorrente.py`
-4. **Novas regras**: Implementar em `jogo_logica.py`
+## Logs
 
-## 📝 Observações Técnicas
+O jogo gera automaticamente um arquivo de log com timestamp contendo todos os eventos do jogo, incluindo:
+- Movimentações de cada entidade
+- Transformações
+- Escapes
+- Colisões e esperas
 
-- **Python 3.7+** requerido para threading
-- **Cross-platform**: Funciona em Windows, Linux e macOS
-- **Performance**: Otimizado para tabuleiros até 100x100
-- **Memória**: Uso eficiente com cleanup automático
-- **Segurança**: Thread-safe com proper locking
+## Arquivos do Projeto
 
-## 🎯 Próximas Melhorias Sugeridas
-
-- [ ] Interface gráfica com Pygame ou Tkinter
-- [ ] Salvamento e carregamento de jogos
-- [ ] Diferentes tipos de zombies
-- [ ] Power-ups para elementos azuis
-- [ ] Multiplayer em rede
-- [ ] Análise de performance com profiling
-- [ ] Logs detalhados de execução
+- `main.py` - Ponto de entrada e parsing de argumentos
+- `game_board.py` - Lógica principal do jogo (Singleton)
+- `entity.py` - Classe abstrata para entidades
+- `human.py` - Implementação dos humanos
+- `zombie.py` - Implementação dos zumbis
+- `game_display.py` - Interface de exibição (Observer)
+- `game_statistics.py` - Coleta de estatísticas
+- `game_logger.py` - Sistema de log thread-safe
