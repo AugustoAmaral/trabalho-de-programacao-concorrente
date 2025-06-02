@@ -204,6 +204,23 @@ class GameBoard:
                             entity.zombify()
                             self.statistics.record_transformation()
                             self.check_transformations(adj_x, adj_y)
+        
+        elif entity_at_pos and entity_at_pos.type == EntityType.HUMAN:
+            adjacent_positions = [
+                (x-1, y), (x+1, y), (x, y-1), (x, y+1)
+            ]
+            
+            for adj_x, adj_y in adjacent_positions:
+                if self.is_valid_position(adj_x, adj_y):
+                    for entity in self.entities:
+                        if (entity.is_alive and 
+                            entity.type == EntityType.ZOMBIE and 
+                            entity.position_x == adj_x and 
+                            entity.position_y == adj_y):
+                            entity_at_pos.zombify()
+                            self.statistics.record_transformation()
+                            self.check_transformations(x, y)
+                            break
     
     def get_nearby_entities(self, x, y):
         nearby = []
