@@ -145,7 +145,7 @@ class GameBoard:
                 if time.time() - wait_start > self.position_wait_timeout:
                     self.statistics.record_collision()
                     self.logger.log(
-                        LogEvent.MOVE_WAITING,
+                        LogEvent.MOVE_WAITING_TIMEOUT,
                         f"Movement timeout waiting for position ({new_x},{new_y})",
                         entity.id,
                         entity.type.value
