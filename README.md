@@ -68,6 +68,11 @@ python3 main.py --board-size 30 --humans 40 --zombies 15 --zombie-strategy PERSE
 python3 main.py --board-size 20 --humans 15 --zombies 5 --cooldown-max 1.0
 ```
 
+### Jogo Ultra Rápido (Tabuleiro pequeno)
+```bash
+python3 main.py --board-size 20 --humans 10 --zombies 5 --cooldown-min 0.1 --cooldown-max 0.5 --display-rate 0.1 --human-bias 0.3 --position-wait-timeout 2
+```
+
 ### Jogo Estratégico (zumbis perseguidores)
 ```bash
 python3 main.py --zombie-strategy PERSEGUICAO --zombie-range 5 --no-human-bias
