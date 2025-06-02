@@ -28,11 +28,13 @@ class GameLogger:
         if not hasattr(self, 'initialized'):
             self.log_file = None
             self.file_lock = threading.Lock()
+            self.show_realtime_logs = False
             self.initialized = True
     
-    def initialize(self, log_file="game_log.txt"):
+    def initialize(self, log_file="game_log.txt", show_realtime_logs=False):
         with self.file_lock:
             self.log_file = log_file
+            self.show_realtime_logs = show_realtime_logs
             with open(self.log_file, 'w') as f:
                 f.write(f"Game Log Started: {datetime.now()}\n")
                 f.write("="*80 + "\n")
@@ -53,7 +55,9 @@ class GameLogger:
                 with open(self.log_file, 'a') as f:
                     f.write(log_entry + "\n")
             
-            print(log_entry)
+            # Somente exibe o log se a opção estiver habilitada
+            if self.show_realtime_logs:
+                print(log_entry)
     
     def close(self):
         with self.file_lock:

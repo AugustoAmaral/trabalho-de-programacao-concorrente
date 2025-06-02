@@ -28,6 +28,8 @@ def parse_arguments():
                        help='Distância máxima para perseguição dos zumbis (padrão: 3)')
     parser.add_argument('--display-rate', type=float, default=0.5,
                        help='Taxa de atualização da tela em segundos (padrão: 0.5)')
+    parser.add_argument('--enable-realtime-logger', action='store_true',
+                       help='Habilita exibição de logs em tempo real durante a execução (padrão: desabilitado)')
     
     args = parser.parse_args()
     validate_args(args)

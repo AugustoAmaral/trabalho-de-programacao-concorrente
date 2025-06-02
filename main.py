@@ -16,6 +16,7 @@ def main():
     print(f"  Timeout: {'Sem limite' if args.game_timeout == 0 else f'{args.game_timeout}s'}")
     print(f"  Estratégia Zumbi: {args.zombie_strategy}")
     print(f"  Bias Humano: {'Desabilitado' if args.no_human_bias else args.human_bias}")
+    print(f"  Log em tempo real: {'Habilitado' if args.enable_realtime_logger else 'Desabilitado'}")
     print("\nIniciando jogo em 3 segundos...")
     
     import time
@@ -34,7 +35,8 @@ def main():
         human_movement_bias=args.human_bias,
         zombie_movement_strategy=args.zombie_strategy,
         zombie_persecution_range=args.zombie_range,
-        display_update_rate=args.display_rate
+        display_update_rate=args.display_rate,
+        show_realtime_logs=args.enable_realtime_logger
     )
     
     try:

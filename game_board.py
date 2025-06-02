@@ -43,6 +43,7 @@ class GameBoard:
             self.game_ended = False
             self.winner = None
             self.start_time = None
+            self.show_realtime_logs = False
             
             self.logger = GameLogger()
             self.statistics = GameStatistics()
@@ -62,7 +63,7 @@ class GameBoard:
                 self.position_conditions[(x, y)] = threading.Condition(self.position_locks[(x, y)])
     
     def start_game(self):
-        self.logger.initialize(f"game_log_{int(time.time())}.txt")
+        self.logger.initialize(f"game_log_{int(time.time())}.txt", self.show_realtime_logs)
         self.logger.log(LogEvent.GAME_START, f"Game started with {self.humans_amount} humans and {self.zombies_amount} zombies")
         
         self.initialize_positions()
