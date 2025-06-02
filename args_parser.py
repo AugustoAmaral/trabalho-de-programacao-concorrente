@@ -15,8 +15,8 @@ def parse_arguments():
                        help='Tempo máximo de cooldown em segundos (padrão: 2.0, max: 5.0)')
     parser.add_argument('--game-timeout', type=float, default=300,
                        help='Tempo limite do jogo em segundos, 0 = sem limite (padrão: 300)')
-    parser.add_argument('--position-wait-timeout', type=float, default=5.0,
-                       help='Tempo máximo de espera por posição livre (padrão: 5.0)')
+    parser.add_argument('--position-wait-timeout', type=float, default=10.0,
+                       help='Tempo máximo de espera por posição livre (padrão: 10.0)')
     parser.add_argument('--human-bias', type=float, default=0.6,
                        help='Fator de bias para movimento dos humanos (padrão: 0.6, entre 0.0 e 1.0)')
     parser.add_argument('--no-human-bias', action='store_true',

@@ -29,7 +29,7 @@ class GameBoard:
             self.cooldown_min = 0.5
             self.cooldown_max = 2.0
             self.game_timeout = 300
-            self.position_wait_timeout = 5.0
+            self.position_wait_timeout = 10.0
             self.human_movement_bias_enabled = True
             self.human_movement_bias = 0.6
             self.zombie_movement_strategy = "ALEATORIO"
