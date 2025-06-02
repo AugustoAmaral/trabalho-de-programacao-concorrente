@@ -13,12 +13,12 @@ Jogo de tabuleiro concorrente onde humanos tentam atravessar o tabuleiro enquant
 
 ### Execução Básica
 ```bash
-python main.py
+python3 main.py
 ```
 
 ### Execução com Parâmetros Personalizados
 ```bash
-python main.py --board-size 30 --humans 40 --zombies 15 --zombie-strategy PERSEGUICAO
+python3 main.py --board-size 30 --humans 40 --zombies 15 --zombie-strategy PERSEGUICAO
 ```
 
 ## Parâmetros Disponíveis
@@ -65,17 +65,17 @@ python main.py --board-size 30 --humans 40 --zombies 15 --zombie-strategy PERSEG
 
 ### Jogo Rápido (tabuleiro pequeno)
 ```bash
-python main.py --board-size 20 --humans 15 --zombies 5 --cooldown-max 1.0
+python3 main.py --board-size 20 --humans 15 --zombies 5 --cooldown-max 1.0
 ```
 
 ### Jogo Estratégico (zumbis perseguidores)
 ```bash
-python main.py --zombie-strategy PERSEGUICAO --zombie-range 5 --no-human-bias
+python3 main.py --zombie-strategy PERSEGUICAO --zombie-range 5 --no-human-bias
 ```
 
 ### Jogo Longo (sem timeout)
 ```bash
-python main.py --game-timeout 0 --board-size 100 --humans 100 --zombies 20
+python3 main.py --game-timeout 0 --board-size 100 --humans 100 --zombies 20
 ```
 
 ## Interrupção do Jogo
@@ -92,7 +92,8 @@ O jogo gera automaticamente um arquivo de log com timestamp contendo todos os ev
 
 ## Arquivos do Projeto
 
-- `main.py` - Ponto de entrada e parsing de argumentos
+- `main.py` - Ponto de entrada do programa
+- `args_parser.py` - Parsing e validação de argumentos da linha de comando
 - `game_board.py` - Lógica principal do jogo (Singleton)
 - `entity.py` - Classe abstrata para entidades
 - `human.py` - Implementação dos humanos
