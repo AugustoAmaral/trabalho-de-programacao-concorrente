@@ -166,39 +166,37 @@ class GameBoard:
             with self.board_lock:
                 entity.position_x = new_x
                 entity.position_y = new_y
+                self.check_transformations(new_x, new_y)
             
             self.statistics.record_move(entity.type.value, (new_x, new_y))
         
         with self.position_conditions[(old_x, old_y)]:
             self.position_conditions[(old_x, old_y)].notify_all()
         
-        self.check_transformations(new_x, new_y)
-        
         return True
     
     def check_transformations(self, x, y):
-        with self.board_lock:
-            entity_at_pos = None
-            for entity in self.entities:
-                if entity.is_alive and entity.position_x == x and entity.position_y == y:
-                    entity_at_pos = entity
-                    break
+        entity_at_pos = None
+        for entity in self.entities:
+            if entity.is_alive and entity.position_x == x and entity.position_y == y:
+                entity_at_pos = entity
+                break
+        
+        if entity_at_pos and entity_at_pos.type == EntityType.ZOMBIE:
+            adjacent_positions = [
+                (x-1, y), (x+1, y), (x, y-1), (x, y+1)
+            ]
             
-            if entity_at_pos and entity_at_pos.type == EntityType.ZOMBIE:
-                adjacent_positions = [
-                    (x-1, y), (x+1, y), (x, y-1), (x, y+1)
-                ]
-                
-                for adj_x, adj_y in adjacent_positions:
-                    if self.is_valid_position(adj_x, adj_y):
-                        for entity in self.entities:
-                            if (entity.is_alive and 
-                                entity.type == EntityType.HUMAN and 
-                                entity.position_x == adj_x and 
-                                entity.position_y == adj_y):
-                                entity.zombify()
-                                self.statistics.record_transformation()
-                                self.check_transformations(adj_x, adj_y)
+            for adj_x, adj_y in adjacent_positions:
+                if self.is_valid_position(adj_x, adj_y):
+                    for entity in self.entities:
+                        if (entity.is_alive and 
+                            entity.type == EntityType.HUMAN and 
+                            entity.position_x == adj_x and 
+                            entity.position_y == adj_y):
+                            entity.zombify()
+                            self.statistics.record_transformation()
+                            self.check_transformations(adj_x, adj_y)
     
     def get_nearby_entities(self, x, y):
         nearby = []
